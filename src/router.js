@@ -7,6 +7,7 @@ import LandingPage from './modules/LandingPage.vue'
 import Login from './modules/Login.vue'
 import Register from './modules/Register.vue'
 import HelloWorld from './components/HelloWorld.vue'
+import GoogleMap from './modules/GoogleMap.vue'
 
 Vue.use(Router)
 
@@ -47,6 +48,11 @@ let router = new Router({
       name: 'dashboard',
       component: Dashboard,
       beforeEnter: auth
+    },
+    {
+      path: '/googlemap',
+      name: 'googlemap',
+      component: GoogleMap
     }
   ]
 })

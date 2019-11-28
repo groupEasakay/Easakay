@@ -26,10 +26,10 @@
             <i class="fas fa-home  fa-lg"></i>
         </b-nav-item>
         <b-nav-item>
-           <i class="fas fa-map-marker-alt fa-lg"  v-b-popover.hover.top="" title="Track Location"></i>
+           <i class="fas fa-map-marker-alt fa-lg"  v-b-popover.hover.top="" @click="redirect('/googlemap')" title="Track Location"></i>
         </b-nav-item>
         <b-nav-item>
-           <i class="fas fa-bell fa-lg"  v-b-popover.hover.top="" title="Notification"></i>
+           <i class="fas fa-bell fa-lg"  v-b-popover.hover.top="" @click="notification" title="Notification"></i>
         </b-nav-item>
 
         <b-nav-item-dropdown right>
@@ -48,6 +48,9 @@
 </template>
 
 <script>
+
+var today = new Date();
+var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 export default {
   data() {
     return {
@@ -66,6 +69,35 @@ export default {
     },
     goToHome(){
        this.$router.push('/dashboard')
+    },
+    notification() {
+      // Use a shorter name for this.$createElement
+      const h = this.$createElement;
+      // Increment the toast count
+      // this.count++;
+      // Create the message
+      const vNodesMsg = h("p", { class: ["text-center", "mb-0"] }, [
+        h("b-spinner", { props: { type: "grow", small: true } }),
+        // " Flashy ",
+        h("strong", {}, "Makabuang Ning Project Dah"),
+        // ` message #${this.count} `,
+        h("b-spinner", { props: { type: "grow", small: true } })
+      ]);
+      // Create the title
+      const vNodesTitle = h(
+        "div",
+        { class: ["d-flex", "flex-grow-1", "align-items-baseline", "mr-2"] },
+        [
+          h("strong", { class: "mr-2" }, "Easakay"),
+          h("small", { class: "ml-auto text-italics" }, time)
+        ]
+      );
+      // Pass the VNodes as an array for message and title
+      this.$bvToast.toast([vNodesMsg], {
+        title: [vNodesTitle],
+        solid: true,
+        variant: "info"
+      });
     }
   }
 };

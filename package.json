@@ -26,6 +26,7 @@
     "vue-material-design-icons": "^4.1.0",
     "vue-router": "^3.1.3",
     "vue-sidebar-menu": "^4.2.2",
+    "vue2-google-maps": "^0.10.7",
     "vuelidate": "^0.7.4",
     "vuelidate-error-extractor": "^2.4.0",
     "vuelidate-forms": "^0.3.0-beta.2",

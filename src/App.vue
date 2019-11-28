@@ -1,6 +1,7 @@
 <template>
-  <div id="app" >
+  <div id="app">
     <Header/>
+    
     <router-view/>
   </div>
 </template>
@@ -8,7 +9,7 @@
 
 <style scoped lang="scss">
 @import "assets/style.scss";
-.background{
+.background {
   background-image: $background !important;
   background-repeat: $norepeat !important;
   background-size: $cover !important ;
@@ -17,12 +18,12 @@
 </style>
 
 <script>
-import Header from 'components/frame/Header.vue'
+import Header from "components/frame/Header.vue";
 
 export default {
-  name: 'app',
+  name: "app",
   components: {
     Header
   }
-}
+};
 </script>
