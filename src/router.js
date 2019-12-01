@@ -8,6 +8,7 @@ import Login from './modules/Login.vue'
 import Register from './modules/Register.vue'
 import HelloWorld from './components/HelloWorld.vue'
 import GoogleMap from './modules/GoogleMap.vue'
+import Edit from './modules/PersonalInfo.vue'
 
 Vue.use(Router)
 
@@ -48,6 +49,11 @@ let router = new Router({
       name: 'dashboard',
       component: Dashboard,
       beforeEnter: auth
+    },
+    {
+      path: '/personalInfo',
+      name: 'personalInfo',
+      component: Edit
     },
     {
       path: '/googlemap',

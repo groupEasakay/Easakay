@@ -37,7 +37,7 @@
           <template v-slot:button-content>
             <i class="fas fa-user fa-lg"></i>
           </template>
-          <b-dropdown-item href="#"><router-link to="/PersonalInfo"> Profile </router-link></b-dropdown-item>
+         <b-dropdown-item href="#" v-on:click="redirect('/personalInfo')"> Profile </b-dropdown-item>
           <b-dropdown-item @click="logout">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
