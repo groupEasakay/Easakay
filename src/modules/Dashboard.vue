@@ -1,3 +1,5 @@
+
+
 <template>
   <b-card>
     <div class="bv-example-row" id="jumbo" bg-variant="white" text-variant="black">
@@ -5,7 +7,6 @@
         <b-col>
           <div class="col-lg-12">
             <b-form-input
-              placeholder="From"
               id="input-live"
               v-model="from"
               aria-describedby="input-live-help input-live-feedback"
@@ -18,6 +19,7 @@
               placeholder="To"
               id="input-live"
               v-model="to"
+              @input.native="filter"
               aria-describedby="input-live-help input-live-feedback"
             ></b-form-input>
           </div>
@@ -28,272 +30,138 @@
               placeholder="Depart Time"
               id="input-live"
               v-model="depart"
+              @input.native="filterbytime"
               aria-describedby="input-live-help input-live-feedback"
             ></b-form-input>
           </div>
         </b-col>
-        <b-col>
+        <!-- <b-col>
           <div class="col-lg-12">
-            <b-form id="b-button">
-              <b-button variant="outline-success">SEARCH</b-button>
-            </b-form>
+            <b-button variant="outline-success">Search</b-button>
           </div>
-        </b-col>
+        </b-col> -->
       </b-row>
     </div>
-    <br />
+    <br>
 
     <!-- BUS COMPONENT HERE!! -->
-
-    <BusList v-bind:buses="buses" />
-    <Modal v-bind:bus="busInModal" v-bind:show="showModal" @close="showModal = false" />
+    <div v-if="filtering">
+      <BusList v-bind:buses="filterArray"/>
+      <div v-if="filterArray.length == 0"><center><br><br>
+      <h1>No available bus</h1></center></div>
+    </div>
+    <div v-else-if="filteringbytime">
+      <BusList v-bind:buses="filterArrayBytime"/>
+      <div v-if="filterArrayBytime.length == 0"><center><br><br>
+      <h1>No available bus</h1></center></div>
+    </div>
+    <div v-else>
+      <BusList v-bind:buses="buses"/>
+    </div>
+    <Modal v-bind:bus="busInModal" v-bind:show="showModal" @close="showModal = false"/>
   </b-card>
 </template>
 
 <script>
 import BusList from "../components/BusList.vue";
 import Modal from "../components/Modal.vue";
-import { EventBus } from "../main";
+// import { EventBus } from "../main";
+import axios from 'axios';
 export default {
   components: {
     BusList,
     Modal
   },
   data() {
-    var currentDate = new Date()
-      .toJSON()
-      .slice(0, 10)
-      .replace(/-/g, "-");
     return {
-      from: "",
+      from: "Southbus Terminal",
       to: "",
       depart: "",
       showModal: false,
       busInModal: { busRoute: {} },
-      buses: [
-        {
-          busId: 1,
-          name: "Sunrays",
-          image: require("assets/sunraysair.jpg"),
-          image1: require('assets/iconbus.png'),
-          plateNumber: "45211",
-          busType: "Aircon",
-          company: "Sunrays Bus Lines",
-          departureTime: "05:00 PM",
-          arrivalTime: "07:30 PM",
-          departureDate: currentDate,
-          rlink: "Router Details",
-          fare: "Estimated Fare Php 120.00 - Php 180.00",
-          busRoute: {
-            from: "Southbus Terminal",
-            to: "Santander Liloan Port",
-            address: "Natalio B. Bacalso Avenue, Cebu City, 6000 Cebu"
-          },
-          dropdown: {
-            adult: "Adult",
-            senior: "Senior Citizen",
-            student: "Student"
-          },
-          availableSeats: 56
-        },
-        {
-          busId: 2,
-          name: "Ceres",
-          image: require("assets/ceresor.jpg"),
-          image1: require('assets/iconbus.png'),
-          plateNumber: "55778",
-          busType: "Ordinary",
-          company: "Ceres Liner",
-          departureTime: "05:00 PM",
-          arrivalTime: "07:30 PM",
-          departureDate: currentDate,
-          rlink: "Router Details",
-          fare: "Estimated Fare Php 120.00 - Php 180.00",
-          busRoute: {
-            from: "Soutbus Terminal",
-            to: "Santander Liloan Port",
-            address: "Natalio B. Bacalso Avenue, Cebu City, 6000 Cebu"
-          },
-          availableSeats: 55
-        },
-        {
-          busId: 3,
-          name: "Ceres",
-          image: require("assets/ceresair.jpg"),
-          image1: require('assets/iconbus.png'),
-          plateNumber: "99667",
-          busType: "Aircon",
-          company: "Ceres Liner",
-          departureTime: "05:00 AM",
-          arrivalTime: "12:00 PM",
-          departureDate: currentDate,
-          rlink: "Router Details",
-          fare: "Estimated Fare Php 120.00 - Php 180.00",
-          busRoute: {
-            from: "Southbus Terminal",
-            to: "Argao",
-            address: "Natalio B. Bacalso Avenue, Cebu City, 6000 Cebu"
-          },
-          availableSeats: 41
-        },
-        {
-          busId: 4,
-          name: "Ceres",
-          image: require("assets/ceres.jpg"),
-          image1: require('assets/iconbus.png'),
-          plateNumber: "71289",
-          busType: "Aircon",
-          company: "Ceres Liner",
-          departureTime: "03:00 PM",
-          arrivalTime: "10:30 PM",
-          departureDate: currentDate,
-          rlink: "Router Details",
-          fare: "Estimated Fare Php 120.00 - Php 180.00",
-          busRoute: {
-            from: "Southbus Terminal",
-            to: "Moalboal via Carcar",
-            address: "Natalio B. Bacalso Avenue, Cebu City, 6000 Cebu"
-          },
-          availableSeats: 45
-        },
-        {
-          busId: 5,
-          name: "Ceres",
-          image: require('assets/ceresairc.jpg'),
-          image1: require('assets/iconbus.png'),
-          plateNumber: "78542",
-          busType: "Aircon",
-          company: "Ceres Liner",
-          departureTime:"04:00 PM",
-          arrivalTime:"11:30 PM",
-          departureDate: currentDate,
-          rlink: "Router Details",
-          fare: "Estimated Fare Php 120.00 - Php 180.00",
-          busRoute: {
-            from: "Southbus Terminal",
-            to: "Bato via Barili",
-            address: "Natalio B. Bacalso Avenue, Cebu City, 6000 Cebu"
-          },
-          availableSeats:45
-        },
-        {
-          busId: 6,
-          name: "Sunrays",
-          image: require("assets/sunraysairc.jpg"),
-          image1: require('assets/iconbus.png'),
-          plateNumber: "58976",
-          busType: "Aircon",
-          company: "Sunrays Bus Lines",
-          departureTime: "09:00 AM",
-          arrivalTime: "04:30 PM",
-          departureDate: currentDate,
-          rlink: "Router Details",
-          fare: "Estimated Fare Php 120.00 - Php 180.00",
-          busRoute: {
-            from: "Soutbus Terminal",
-            to: "Santander Liloan Port",
-            address: "Natalio B. Bacalso Avenue, Cebu City, 6000 Cebu"
-          },
-          availableSeats: 39
-        },
-        {
-          busId: 7,
-          name: "Ceres",
-          image: require('assets/ceresord.jpg'),
-          image1: require('assets/iconbus.png'),
-          plateNumber: "52345",
-          busType: "Ordinary",
-          company: "Ceres Liner",
-          departureTime:"01:00 PM",
-          arrivalTime:"12:00 Mid",
-          departureDate: currentDate,
-          rlink: "Router Details",
-          fare: "Estimated Fare Php 120.00 - Php 180.00",
-          busRoute: {
-            from: "Southbus Terminal",
-            to: "Bato via Oslob",
-            address: "Natalio B. Bacalso Avenue, Cebu City, 6000 Cebu"
-          },
-          availableSeats:41
-        },
-        {
-          busId: 8,
-          name: "Sunrays",
-          image: require("assets/sunrays.jpg"),
-          image1: require('assets/iconbus.png'),
-          plateNumber: "80123",
-          busType: "Aircon",
-          company: "Sunrays Bus Lines",
-          departureTime: "07:00 AM",
-          arrivalTime: "10:30 AM",
-          departureDate: currentDate,
-          rlink: "Router Details",
-          fare: "Estimated Fare Php 120.00 - Php 180.00",
-          busRoute: {
-            from: "Southbus Terminal",
-            to: "Alcoy",
-            address: "Natalio B. Bacalso Avenue, Cebu City, 6000 Cebu"
-          },
-          availableSeats: 55
-        },
-        {
-          busId: 9,
-          name: "Sunrays",
-          image: require("assets/sunraysexp.jpg"),
-          image1: require('assets/iconbus.png'),
-          plateNumber: "78542",
-          busType: "Ordinary",
-          company: "Sunrays Bus Lines",
-          departureTime: "01:00 PM",
-          arrivalTime: "08:30 PM",
-          departureDate: currentDate,
-          rlink: "Router Details",
-          fare: "Estimated Fare Php 120.00 - Php 180.00",
-          busRoute: {
-            from: "Southbus Terminal",
-            to: "Liloan Port",
-            address: "Natalio B. Bacalso Avenue, Cebu City, 6000 Cebu"
-          },
-          availableSeats: 39
-        },
-        {
-          busId: 10,
-          name: "Sunrays",
-          image: require("assets/sunraysord.jpg"),
-          image1: require('assets/iconbus.png'),
-          plateNumber: "18956",
-          busType: "Ordinary",
-          company: "Sunrays Bus Lines",
-          departureTime: "04:00 AM",
-          arrivalTime: "08:30 PM",
-          departureDate: currentDate,
-          rlink: "Router Details",
-          fare: "Estimated Fare Php 120.00 - Php 180.00",
-          busRoute: {
-            from: "Southbus Terminal",
-            to: "Samboan via Oslob",
-            address: "Natalio B. Bacalso Avenue, Cebu City, 6000 Cebu"
-
-          },
-          
-            
-          availableSeats: 45
-        },
-      ]
+      filterArray: [],
+      filterArrayBytime: [],
+      filtering: false,
+      filteringbytime: false,
+      buses: []
     };
   },
   methods: {
+    defaultFilter(){
+      // let search = {};
+      
+      if (this.to != "") {
+        this.filtering = true;
+      }
+      if (this.depart != "") {
+        this.filtering = true;
+      }
+      axios({url: 'http://localhost:8082/search',data:{ }, method: 'GET' })
+				.then(resp => {
+            // console.log(resp.data.buses);
+            this.buses = resp.data.buses;
+				})
+				.catch(err => {
+					console.log(err)
+				})
+    },
+    filter() {
+      if (this.to != "") {
+        this.filtering = true;
+      }
+      let way = this.to.toLowerCase();
+      let size = way.length;
+      var tempArray = [];
+      this.buses.forEach(element => {
+        let busRT = element.busRoute.to.toLowerCase();
+        if (way == busRT.slice(0, size)){
+          tempArray.push(element);
+        }
+      });
+      this.filterArray = tempArray;
+    },
+    filterbytime() {
+      if (this.depart != "" && this.filterArray.length != 0) {
+        this.filteringbytime = true;
+        this.filtering = false;
+      }
+      let way = this.depart.toLowerCase();
+      var tempArray = [];
+      this.filterArray.forEach(element => {
+        let dtime = element.departureTime.toLowerCase();
+        if (dtime.includes(way)){
+          tempArray.push(element);
+        }
+      });
+      this.filterArrayBytime = tempArray;
+    },
     getTicket() {
       console.log("getTicket");
     }
+  
+  
+  
+  
+  
+  
   },
-  mounted() {
-    EventBus.$on("displayBusDataOnModal", data => {
-      this.busInModal = data;
-      this.showModal = true;
-    });
-  },
-  search() {}
+  // mounted() {
+  //   EventBus.$on("displayBusDataOnModal", data => {
+  //     this.busInModal = data;
+  //     this.showModal = true;
+  //   });
+  // },
+  // search() {}
+  created(){
+    axios({url: 'http://localhost:8082/buses', method: 'GET' })
+				.then(resp => {
+            // console.log(resp.data.buses);
+            this.buses = resp.data.buses;
+				})
+				.catch(err => {
+					console.log(err)
+				})
+  }
 };
 </script>
 

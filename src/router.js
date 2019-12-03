@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from './store.js'
-
+import RouterDetails from './modules/RouterDetails.vue'
 import Dashboard from './modules/Dashboard.vue'
 import LandingPage from './modules/LandingPage.vue'
 import Login from './modules/Login.vue'
@@ -59,6 +59,12 @@ let router = new Router({
       path: '/googlemap',
       name: 'googlemap',
       component: GoogleMap
+    },
+    {
+      path: '/routerdetails',
+      name: 'routerdetails',
+      component: RouterDetails,
+      beforeEnter: auth
     }
   ]
 })

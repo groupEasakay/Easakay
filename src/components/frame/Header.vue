@@ -1,6 +1,6 @@
 <template>
   <div fixed="top">
-     <b-navbar toggleable="lg" type="dark" variant="success">
+     <b-navbar toggleable="lg" type="dark" variant="success" >
     <router-link to="/"><b-navbar-brand id="Logotext">Easakay</b-navbar-brand></router-link>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
