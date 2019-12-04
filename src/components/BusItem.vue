@@ -69,6 +69,7 @@ export default {
         book(){
             if(this.isModalVisible == true)
             console.log("BOOK TODO")
+            
         },
         closeModal(){
             console.log("CLOSE MODAL")

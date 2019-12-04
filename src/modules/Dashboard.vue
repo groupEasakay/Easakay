@@ -1,5 +1,3 @@
-
-
 <template>
   <b-card>
     <div class="bv-example-row" id="jumbo" bg-variant="white" text-variant="black">

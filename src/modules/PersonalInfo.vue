@@ -3,7 +3,7 @@
     <div>
       <center>
         <h1>Profile</h1>
-        <hr>
+        <hr />
       </center>
     </div>
     <div class="mt-4">
@@ -30,7 +30,7 @@
                   ref="file"
                   accept="file/*"
                   style="display:none"
-                >
+                />
                 <!-- <center>
                   <br />
                    <h1>Hi {{Uname}}</h1>
@@ -73,20 +73,21 @@
                 @click="save"
               >Save changes</button>
             </center>
-            <br>
+            <br />
           </b-col>
         </b-row>
       </b-container>
     </div>
 
-    <br>
-    <br>
+    <br />
+    <br />
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import $ from "jquery";
+import jwt from "jsonwebtoken";
 export default {
   data() {
     return {
@@ -107,32 +108,28 @@ export default {
         username: this.username,
         password: this.password,
         email: this.email,
-        image: this.imgUrl
+        image: this.imgUrl,
+        token: localStorage.getItem("jwt")
       };
       sessionStorage.setItem("Username", this.username),
         sessionStorage.setItem("Email", this.email),
         sessionStorage.setItem("Password", this.password),
-
         console.log(data);
-        // axios
-        //   .post("http://localhost:8082/user/profile", data, {
-        //     headers: {
-        //       "Content-Type": "multipart/form-data"
-        //     }
-        //   })
+      axios
+        .post("http://localhost:8082/user/profile", { data: data })
 
- axios.post("http://localhost:8082/user/profile", {data: data})
+        .then(res => {
+          (this.username = ""),
+            (this.email = ""),
+            (this.password = ""),
+            (this.imgUrl = "");
+          console.log(res);
 
-          .then(res => {
-            (this.username = ""), (this.email = ""), (this.password = "");
-            console.log(res);
-
-            this.imgUrl = res.data.filename;
-          })
-          .catch(err => {
-            console.log(err);
-          });
-          
+          this.imgUrl = res.data.image;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     addImage() {
       $("#images")[0].click();
@@ -169,6 +166,18 @@ export default {
       this.file = temp[2];
       this.uploaded = true;
     }
+  },
+  mounted() {
+    var decoded = jwt.decode(localStorage.getItem("jwt"));
+    var id = decoded._id;
+    console.log(id);
+    axios.get("http://localhost:8082/user/retrieve/" + id).then(res => {
+      console.log(res);
+      this.imgUrl = res.data.image;
+      this.username = res.data.username;
+      this.password = res.data.password;
+      this.email = res.data.email;
+    });
   }
 };
 </script>

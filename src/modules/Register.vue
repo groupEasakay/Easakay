@@ -139,7 +139,8 @@ export default {
       let data = {
         username: this.user.username,
         password: this.user.password,
-        email: this.user.email
+        email: this.user.email,
+        image: ""
       }
      
       this.$store.dispatch('registerAsync', { data })
