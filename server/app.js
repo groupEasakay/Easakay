@@ -14,6 +14,9 @@ const path = require('path')
 const router = require('express').Router();
 // const Post = require('./../models/post');
 
+// const http = require('http').Server(app)
+// const io = require('socket.io')(http)
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors())
@@ -575,6 +578,17 @@ app.get('/items', function (req, res, next) {
     res.json({ items: items });
 });
 
+
+// io.on("connection", socket => {
+
+//     socket.on("notification", data => {
+//         console.log("Browser send notification from: " + data.username);
+//         //SENDING NOTIFICATION BACK TO BROWSER
+//        io.to('channel.' + data.username).emit({ message: "This message is from server." });
+//     });
+
+// });
+
 app.listen(port, (err) => {
     if (err) {
         console.log(err)
@@ -582,3 +596,7 @@ app.listen(port, (err) => {
         console.log('connected ' + port)
     }
 })
+
+// http.listen(port, () => {
+//     console.log('Listening on *:'+port)
+// })

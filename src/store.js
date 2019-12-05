@@ -38,6 +38,8 @@ export default new Vuex.Store({
 					console.log(resp)
 					if(token){
 						localStorage.setItem('jwt', token)
+						// localStorage.setItem('username',user.username)
+						// console.log(username);
 					}
 					axios.defaults.headers.common['Authorization'] = token
 					commit('auth_success', token, user)
